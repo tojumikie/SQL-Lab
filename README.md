@@ -4,6 +4,7 @@ SQL Lab
 1.0	Setting up Postgres Chinook
 In this section you will begin the process of working with the Oracle Chinook database
 Task – Open the Chinook_PostgreSql.sql file and execute the scripts within.
+
 2.0 SQL Queries
 In this section you will be performing various queries against the Postgres Chinook database.
 2.1 SELECT
