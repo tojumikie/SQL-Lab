@@ -25,3 +25,91 @@ update customer set firstname = 'Robert', lastname = 'Walter' where customerid =
 
 update artist set "name" = 'CCR' where artistid = 76;
 
+select * from invoice where billingaddress like 'T%';
+
+select * from invoice where total between 15 and 50;
+
+select * from employee where hiredate between '2003-06-01' and '2004-03-01';
+
+--2.7
+--select * from customer;
+--select * from invoice;
+--delete from invoice where customerid = 32;
+--delete from customer where customerid = 32;
+
+
+--3.1.1
+select CURTIME();
+
+--3.1.2
+--select * from mediatype;
+select length(mediatype."name") as MediatypeLength from mediatype;
+
+--3.2.1
+select avg(total) from invoice;
+--3.2.2
+select max(unitprice) from track;
+--3.3
+select avg(unitprice) from invoiceline;
+
+--3.4
+select * from employee where birthdate >= '1968-01-01';
+
+--4.1
+create procedure firstlastname
+as
+select firstname, lastname from employee;
+go;
+
+exec firstlastname;
+
+--4.2.2
+create procedure managers
+as
+select * from employee where
+	title = 'General Manager' or
+	title = 'Sales Manager' or
+	title = 'IT Manager'
+go;
+
+exec managers;
+
+--4.3
+--select * from customer;
+create procedure testing 
+as
+select concat(firstname, ' ', lastname) as name, company from customer
+go;
+
+exec testing;
+
+--5.0
+
+--6.0
+
+--7.1
+--select * from customer;
+--select * from invoice;
+--select * from invoiceline;
+--select concat(firstname, ' ', lastname) as name from customer
+--inner join invoice 
+--on customer.name =  invoice.invoiceid;
+
+select customer.lastname from customer
+inner join orders on 
+
+--7.2
+
+--7.3
+
+
+--7.4
+--select * from album
+--select * from artist
+
+select * from album 
+cross join artist 
+order by artist."name";
+
+--7.5
+--select * from employee
