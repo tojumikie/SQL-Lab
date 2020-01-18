@@ -1,3 +1,4 @@
+--2.0
 select * from employee;
 
 select * from employee where lastname = 'King';
@@ -34,8 +35,24 @@ select * from employee where hiredate between '2003-06-01' and '2004-03-01';
 --2.7
 --select * from customer;
 --select * from invoice;
+--select * from invoiceline;
 --delete from invoice where customerid = 32;
 --delete from customer where customerid = 32;
+
+--delete from invoiceline where invoiceid = 32;
+--delete from invoice where customerid = 32;
+--delete from customer where customerid = 32;
+
+delete from invoiceline where invoiceid = 50;
+delete from invoiceline where invoiceid = 61;
+delete from invoiceline where invoiceid = 116;
+delete from invoiceline where invoiceid = 245;
+delete from invoiceline where invoiceid = 268;
+delete from invoiceline where invoiceid = 290;
+delete from invoiceline where invoiceid = 342;
+delete from invoice where customerid = 32;
+delete from customer where firstname = 'Robert' and lastname = 'Walter';
+
 
 
 --3.1.1
@@ -63,6 +80,17 @@ go;
 
 exec firstlastname;
 
+--4.2.1
+create procedure SwitchFirstAndLastName
+as
+update employee
+set lastname = 'Mikie', firstname = 'Toju' where employeeid = 9;
+update employee
+set lastname = 'Smith', firstname = 'David' where employeeid = 10;
+go;
+
+exec SwitchFirstAndLastName;
+
 --4.2.2
 create procedure managers
 as
@@ -83,9 +111,50 @@ go;
 
 exec testing;
 
---5.0
+--5.0.1
+create procedure transaction1
+as
+	begin transaction
+		delete from invoiceline where invoiceid = 402;
+		delete from invoice where invoiceid = 402;	
+	commit transaction
+go;
 
---6.0
+--5.0.2
+create procedure transaction2
+as
+	begin transaction
+		insert into customer (firstname, lastname, customerid, email) values 
+		('toju', 'mikie', 62, 'tojumikie@live.com');
+	commit transaction
+go;
+
+--6.1.1
+create trigger afterInsertTrigger on employee
+after insert as
+begin
+	INSERT INTO Employee (EmployeeId, LastName, FirstName, Title, ReportsTo, BirthDate, HireDate, Address, City, State, Country, PostalCode, Phone, Fax, Email) VALUES 
+	(11, N'Lemere', N'Chrisco', N'IT Staff', 6, '1994/04/09', '2020/01/06', N'12708 Bruce B Downs Blvd', N'Tampa', N'FL', N'USA', N'33612', N'+1 (833) 384-4012', N'', N'criscolemere@gmail.com');
+end
+go
+
+--6.1.2
+create or replace trigger afterUpdateTrigger
+after update on album
+begin
+	insert into album(albumid, title) values (348, 'Days Go By');
+end
+
+--6.1.3
+create or replace trigger afterDeleteTrigger
+after delete on customer
+begin
+	delete from customer where firstname = 'Victor' and lastname = 'Stevens';
+end
+
+
+
+
 
 --7.1
 --select * from customer;
@@ -94,14 +163,25 @@ exec testing;
 --select concat(firstname, ' ', lastname) as name from customer
 --inner join invoice 
 --on customer.name =  invoice.invoiceid;
+--select customer.lastname from customer
+--inner join orders on 
 
-select customer.lastname from customer
-inner join orders on 
+select 
+	customer.firstname,
+	customer.lastname,
+	invoice.invoiceid
+from customer
+inner join invoice on invoice.customerid = customer.customerid;
 
 --7.2
+SELECT * FROM customer
+full outer join invoice on customer.customerid = invoice.invoiceid;
+
 
 --7.3
-
+select * from artist
+right join album on
+artist."name" = album.title;
 
 --7.4
 --select * from album
@@ -113,3 +193,6 @@ order by artist."name";
 
 --7.5
 --select * from employee
+
+select * from employee e1, employee e2
+where e1.reportsto <> e2.reportsto
